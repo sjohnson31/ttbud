@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { PureSettings } from "./Settings";
 import noop from "../../util/noop";
-import { fireEvent } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
 
 const DEFAULT_PROPS = {
   showTourPrompt: false,
@@ -124,7 +124,7 @@ describe("Settings", () => {
       />
     );
 
-    fireEvent.click(getByLabelText("dismiss"));
+    userEvent.click(getByLabelText("dismiss"));
     expect(onTourPromptDismissed).toBeCalled();
   });
 
@@ -138,7 +138,7 @@ describe("Settings", () => {
       />
     );
 
-    fireEvent.click(getByLabelText("Settings"));
+    userEvent.click(getByLabelText("Settings"));
     expect(onTourPromptDismissed).toBeCalled();
   });
 
@@ -149,10 +149,20 @@ describe("Settings", () => {
       <PureSettings {...DEFAULT_PROPS} onTourClicked={onTourClicked} />
     );
 
-    fireEvent.click(getByLabelText("Settings"));
-    fireEvent.click(getByText("Start Tour"));
+    userEvent.click(getByLabelText("Settings"));
+    userEvent.click(getByText("Start Tour"));
 
     expect(onTourClicked).toBeCalledTimes(1);
     expect(queryByText("Start Tour")).not.toBeVisible();
+  });
+
+  it("shows the about dialog when clicked", () => {
+    const { getByText, getByLabelText } = render(
+      <PureSettings {...DEFAULT_PROPS} />
+    );
+
+    userEvent.click(getByLabelText("Settings"));
+    userEvent.click(getByText("about"));
+    expect(getByText("Your virtual table friend")).toBeVisible();
   });
 });

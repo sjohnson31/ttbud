@@ -44,6 +44,8 @@ export interface DroppableMonitor {
   onBeforeDragStart(draggable: DraggableDescriptor, bounds: Bounds): void;
   findDroppableAt(pos: Pos2d): DroppableConfigApi | undefined;
   getDroppable(id: string): DroppableConfigApi;
+  addDroppable(config: DroppableConfig): void;
+  removeDroppable(droppableId: string): void;
 }
 
 export class DomDroppableMonitor implements DroppableMonitor {

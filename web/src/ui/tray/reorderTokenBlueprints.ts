@@ -52,6 +52,7 @@ export function reorderTokenBlueprints({
     case DragResult.DraggedOutOf:
     case DragResult.None:
       break;
+    /* istanbul ignore next */
     default:
       throw new UnreachableCaseError(dragResult);
   }

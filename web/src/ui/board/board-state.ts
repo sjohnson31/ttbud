@@ -40,7 +40,7 @@ export interface ActionParams {
   isConfirmed: boolean;
 }
 
-export function stringify(pos: Pos3d) {
+export function toPosStr(pos: Pos3d) {
   return `${pos.x},${pos.y},${pos.z}`;
 }
 
@@ -55,6 +55,7 @@ export function applyAction({ boardState, action, isConfirmed }: ActionParams) {
     case "ping":
       upsertEntity(boardState, action.ping, isConfirmed);
       break;
+    /* istanbul ignore next */
     default:
       throw new UnreachableCaseError(action);
   }
@@ -67,7 +68,7 @@ export function deleteEntity(boardState: BoardState, entityId: string) {
   delete boardState.entityById[entityId];
 
   if (entity.type !== "ping") {
-    delete boardState.tokenIdsByPosStr[stringify(entity.pos)];
+    delete boardState.tokenIdsByPosStr[toPosStr(entity.pos)];
   }
 
   if (entity.type === "character") {
@@ -86,7 +87,7 @@ export function upsertEntity(
 ) {
   // If it's not a ping, check for collision
   if (entity.type !== "ping") {
-    const existingId = boardState.tokenIdsByPosStr[stringify(entity.pos)];
+    const existingId = boardState.tokenIdsByPosStr[toPosStr(entity.pos)];
     // Can't upsert, something's already there
     if (existingId && existingId !== entity.id) return;
   }
@@ -98,7 +99,7 @@ export function upsertEntity(
 
   // Pings don't store the collision bookkeeping info
   if (entity.type !== "ping") {
-    boardState.tokenIdsByPosStr[stringify(entity.pos)] = entity.id;
+    boardState.tokenIdsByPosStr[toPosStr(entity.pos)] = entity.id;
   }
 
   if (entity.type === "character") {
@@ -135,7 +136,7 @@ export function tokenIdAt(
   boardState: BoardState,
   pos: Pos3d
 ): string | undefined {
-  return boardState.tokenIdsByPosStr[stringify(pos)];
+  return boardState.tokenIdsByPosStr[toPosStr(pos)];
 }
 
 export function pingAt(boardState: BoardState, pos: Pos2d): string | undefined {

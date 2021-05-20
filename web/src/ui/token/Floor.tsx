@@ -23,6 +23,7 @@ const Floor: React.FC<Props> = ({ contents, pos }) => {
       }
     case ContentType.Text:
       return <FloorText text={contents.text} pos={pos} />;
+    /* istanbul ignore next */
     default:
       throw new UnreachableCaseError(contents);
   }

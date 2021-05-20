@@ -32,7 +32,7 @@ const Ping: React.FC<Props> = memo(({ x, y }) => {
     top: y + GRID_SIZE_PX / 2,
   };
 
-  return <div style={style} className={classes.ping} />;
+  return <div style={style} className={classes.ping} aria-label={"ping"} />;
 });
 
 export default Ping;

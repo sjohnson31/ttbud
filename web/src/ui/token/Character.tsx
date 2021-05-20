@@ -57,6 +57,7 @@ const Character: React.FC<Props> = memo((props) => {
         }
       case ContentType.Text:
         return contents.text.toLocaleUpperCase();
+      /* istanbul ignore next */
       default:
         throw new UnreachableCaseError(contents);
     }

@@ -56,6 +56,7 @@ function toApiAction(action: Action): ApiAction {
           ...ping.pos,
         },
       };
+    /* istanbul ignore next */
     default:
       throw new UnreachableCaseError(action);
   }
@@ -81,6 +82,7 @@ function toType(type: "character" | "floor") {
       return EntityType.Character;
     case "floor":
       return EntityType.Floor;
+    /* istanbul ignore next */
     default:
       throw new UnreachableCaseError(type);
   }
@@ -281,6 +283,7 @@ export class RealBoardStateApiClient {
           tokens: message.data.map(toToken),
         });
         break;
+      /* istanbul ignore next */
       default:
         throw new UnreachableCaseError(message);
     }

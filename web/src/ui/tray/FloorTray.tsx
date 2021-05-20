@@ -154,6 +154,7 @@ const PureFloorTray: React.FC<Props> = memo(function FloorTray({
         );
       case ContentType.Text:
         return <div className={classes.contents}>{contents.text}</div>;
+      /* istanbul ignore next */
       default:
         throw new UnreachableCaseError(contents);
     }

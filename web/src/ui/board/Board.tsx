@@ -35,6 +35,7 @@ import {
 import { connect } from "react-redux";
 import { EntityType, TokenContents } from "../../types";
 import { BoardState, pingAt, tokenIdAt } from "./board-state";
+import { LEFT_MOUSE, RIGHT_MOUSE } from "../__test_util__/pointer";
 
 let GRID_COLOR = "#947C65";
 
@@ -82,9 +83,6 @@ const toGridPos = (pixelPos: Pos2d) => {
     y: snappedPixelPos.y / GRID_SIZE_PX,
   };
 };
-
-const LEFT_MOUSE = 1;
-const RIGHT_MOUSE = 2;
 
 const preventDefault: MouseEventHandler = (e) => e.preventDefault();
 
@@ -202,6 +200,7 @@ const PureBoard: React.FC<Props> = ({
             <Ping x={pixelPos.x} y={pixelPos.y} />
           </Fade>
         );
+      /* istanbul ignore next */
       default:
         throw new UnreachableCaseError(token);
     }
@@ -213,6 +212,8 @@ const PureBoard: React.FC<Props> = ({
     shiftKey,
     buttons,
   }) => {
+    if (isDragging) return;
+
     const gridPos = toGridPos({ x, y });
     if (shiftKey && buttons === LEFT_MOUSE) {
       onPingCreated(gridPos);

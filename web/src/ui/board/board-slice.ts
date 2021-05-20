@@ -176,6 +176,7 @@ const boardSlice = createSlice({
           break;
         case DragResult.None:
           break;
+        /* istanbul ignore next */
         default:
           throw new UnreachableCaseError(dragResult);
       }

@@ -35,6 +35,7 @@ function disconnectMessage(state: Disconnected) {
       return "You've made too many rooms recently, please wait a few minutes before trying again";
     case ConnectionError.UNKNOWN:
       return "An unknown error has occurred";
+    /* istanbul ignore next */
     default:
       throw new UnreachableCaseError(state.error);
   }
@@ -75,6 +76,7 @@ const PureConnectionNotifier: React.FC<Props> = ({
           Disconnected: {disconnectMessage(connectionState)}
         </Alert>
       );
+    /* istanbul ignore next */
     default:
       throw new UnreachableCaseError(connectionState);
   }

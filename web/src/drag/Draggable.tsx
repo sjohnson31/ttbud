@@ -140,6 +140,7 @@ const Draggable: React.FC<Props> = ({
             y: state.destination.bounds.top - state.source.bounds.top,
           },
         };
+      /* istanbul ignore next */
       default:
         throw new UnreachableCaseError(state);
     }
@@ -238,6 +239,7 @@ const Draggable: React.FC<Props> = ({
         return { onTransitionEnd };
       case DragStateType.Dragging:
         return {};
+      /* istanbul ignore next */
       default:
         throw new UnreachableCaseError(state);
     }

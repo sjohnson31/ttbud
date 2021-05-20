@@ -2,7 +2,7 @@ import { render } from "@testing-library/react";
 import TourPopup from "./TourPopup";
 import React from "react";
 import noop from "../../util/noop";
-import { fireEvent } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
 
 const DEFAULT_PROPS = {
   current: 0,
@@ -56,7 +56,7 @@ describe("TourPopup", () => {
       />
     );
 
-    fireEvent.click(getByText("Next"));
+    userEvent.click(getByText("Next"));
     expect(gotoStep).toBeCalledWith(1);
   });
 
@@ -71,7 +71,7 @@ describe("TourPopup", () => {
       />
     );
 
-    fireEvent.click(getByText("Previous"));
+    userEvent.click(getByText("Previous"));
     expect(gotoStep).toBeCalledWith(0);
   });
 
@@ -87,7 +87,7 @@ describe("TourPopup", () => {
       />
     );
 
-    fireEvent.click(getByText("Done"));
+    userEvent.click(getByText("Done"));
     expect(done).toBeCalled();
   });
 });

@@ -1,4 +1,8 @@
-import { DroppableConfigApi, DroppableMonitor } from "../DroppableMonitor";
+import {
+  DroppableConfig,
+  DroppableConfigApi,
+  DroppableMonitor,
+} from "../DroppableMonitor";
 import Pos2d, { Bounds, contains } from "../../util/shape-math";
 import { assert } from "../../util/invariants";
 
@@ -8,6 +12,12 @@ export interface FakeDroppable extends DroppableConfigApi {
   onBeforeDragStart?: () => void;
 }
 
+/**
+ * Fake droppable that avoids interacting with layout since jsdom does not support it
+ *
+ * Droppables can be set up with bounds directly via setDroppables, but droppables
+ * that add themselves dynamically with be zero-area elements at the origin
+ */
 export class FakeDroppableMonitor implements DroppableMonitor {
   private droppables: FakeDroppable[] = [];
 
@@ -25,6 +35,24 @@ export class FakeDroppableMonitor implements DroppableMonitor {
     const droppable = this.droppables.find((droppable) => droppable.id === id);
     assert(droppable, `Droppable ${id} does not exist`);
     return droppable;
+  }
+
+  public addDroppable(config: DroppableConfig) {
+    this.droppables.push({
+      ...config,
+      bounds: { top: 0, left: 0, bottom: 0, right: 0 },
+      zIndex: 0,
+      onBeforeDragStart: () => {},
+    });
+  }
+
+  public removeDroppable(droppableId: string) {
+    const idx = this.droppables.findIndex(
+      (droppable) => (droppable.id = droppableId)
+    );
+    if (idx !== -1) {
+      this.droppables.splice(idx);
+    }
   }
 
   onBeforeDragStart(): void {

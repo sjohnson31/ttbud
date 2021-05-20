@@ -156,6 +156,7 @@ export default function SortableList<T extends DraggableItem>({
             draggableId: dragState.draggable?.id,
             dragStartIdx: getListIdx(id, dragState.source),
           };
+        /* istanbul ignore next */
         default:
           throw new UnreachableCaseError(dragState);
       }

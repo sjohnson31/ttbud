@@ -118,6 +118,7 @@ const SearchDialog: React.FC<Props> = memo(({ icons, open, onClose }) => {
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         <TextField
+          id="search"
           fullWidth
           autoFocus
           className={classes.search}
