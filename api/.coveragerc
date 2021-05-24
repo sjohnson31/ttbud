@@ -14,7 +14,5 @@ exclude_lines =
     # assert_never occurs on lines we want mypy to verify statically are never run
     assert_never
 
-ignore_errors = True
-
 [html]
 directory = coverage
