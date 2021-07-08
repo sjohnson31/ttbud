@@ -13,6 +13,7 @@ const useStyles = makeStyles({
   media: {
     width: GRID_SIZE_PX,
     height: GRID_SIZE_PX,
+    userDrag: "none",
     userSelect: "none",
   },
 });
@@ -33,7 +34,7 @@ const FloorIcon: React.FC<Props> = ({ icon, pos }) => {
   // Setting draggable to false or user-drag to none on this or its parent
   // does not prevent this from happening, so instead we use a background image.
   return (
-    <div
+    <span
       style={style}
       className={classes.media}
       role={"img"}

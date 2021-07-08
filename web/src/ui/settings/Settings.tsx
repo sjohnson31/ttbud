@@ -8,6 +8,7 @@ import {
   makeStyles,
   Popover,
   Snackbar,
+  Switch,
   Tooltip,
   Typography,
 } from "@material-ui/core";
@@ -20,6 +21,12 @@ import { connect } from "react-redux";
 import { RootState } from "../../store/rootReducer";
 import { dismissTourPrompt } from "./settings-slice";
 import AboutDialog from "../about/About";
+import {
+  InteractionType,
+  toggleDeleteMode,
+  togglePingMode,
+} from "../board/board-slice";
+import { startSearching } from "../app/app-slice";
 
 const FIVE_SECONDS_MS = 5000;
 
@@ -56,10 +63,15 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   className?: string;
+  deleteMode: boolean;
+  pingMode: boolean;
   showTourPrompt: boolean;
   onClearMap: () => void;
   onTourClicked: () => void;
   onTourPromptDismissed: () => void;
+  onDeleteClicked: () => void;
+  onPingClicked: () => void;
+  onSearchClicked: () => void;
 }
 
 const searchShortcut = isMac() ? "command+f" : "control+f";
@@ -68,9 +80,14 @@ const PureSettings: React.FC<Props> = memo(
   ({
     className,
     showTourPrompt,
+    deleteMode,
+    pingMode,
     onClearMap,
     onTourClicked,
     onTourPromptDismissed,
+    onDeleteClicked,
+    onPingClicked,
+    onSearchClicked,
   }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -116,6 +133,11 @@ const PureSettings: React.FC<Props> = memo(
     };
 
     const onAboutClosed = () => setIsShowingAboutDialog(false);
+
+    const onSearchSettingClicked = () => {
+      setAnchorEl(null);
+      onSearchClicked();
+    };
 
     return (
       <>
@@ -227,19 +249,40 @@ const PureSettings: React.FC<Props> = memo(
                 <ListSubheader color="primary">Commands</ListSubheader>
               }
             >
-              <ListItem dense={true}>
+              <ListItem
+                button
+                dense={true}
+                component="button"
+                onClick={onSearchSettingClicked}
+              >
                 <ListItemText primary="Search" />
                 <Typography color="textSecondary">
                   ({searchShortcut})
                 </Typography>
               </ListItem>
               <ListItem dense={true}>
-                <ListItemText primary="Delete Token" />
-                <Typography color="textSecondary">(right click)</Typography>
+                <ListItemText
+                  primary="Delete Mode"
+                  secondary="(right click)"
+                  className={classes.settingMainText}
+                />
+                <Switch
+                  edge="end"
+                  onChange={() => onDeleteClicked()}
+                  checked={deleteMode}
+                />
               </ListItem>
               <ListItem dense={true}>
-                <ListItemText primary="Ping" />
-                <Typography color="textSecondary">(shift+click)</Typography>
+                <ListItemText
+                  primary="Ping Mode"
+                  secondary="(shift+click)"
+                  className={classes.settingMainText}
+                />
+                <Switch
+                  edge="end"
+                  onChange={() => onPingClicked()}
+                  checked={pingMode}
+                />
               </ListItem>
             </List>
             <button className={classes.aboutLink} onClick={onAboutClicked}>
@@ -254,10 +297,15 @@ const PureSettings: React.FC<Props> = memo(
 
 const mapStateToProps = (state: RootState) => ({
   showTourPrompt: state.settings.showTourPrompt,
+  deleteMode: state.board.interaction === InteractionType.Delete,
+  pingMode: state.board.interaction === InteractionType.Ping,
 });
 
 const dispatchProps = {
   onTourPromptDismissed: dismissTourPrompt,
+  onDeleteClicked: toggleDeleteMode,
+  onPingClicked: togglePingMode,
+  onSearchClicked: startSearching,
 };
 
 const Settings = connect(mapStateToProps, dispatchProps)(PureSettings);

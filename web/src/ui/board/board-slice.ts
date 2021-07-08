@@ -18,18 +18,32 @@ import { Action } from "../../network/BoardStateApiClient";
 import { AppThunk } from "../../store/createStore";
 import pause from "../../util/pause";
 
-const INITIAL_STATE: MergeState = {
-  unqueuedActions: [],
-  queuedUpdates: [],
-  local: {
-    entityById: {},
-    charIdsByContentId: {},
-    tokenIdsByPosStr: {},
-  },
-  network: {
-    entityById: {},
-    charIdsByContentId: {},
-    tokenIdsByPosStr: {},
+export enum InteractionType {
+  Draw = "draw",
+  Delete = "delete",
+  Ping = "ping",
+}
+
+interface BoardState {
+  tokens: MergeState;
+  interaction: InteractionType;
+}
+
+const INITIAL_STATE: BoardState = {
+  interaction: InteractionType.Draw,
+  tokens: {
+    unqueuedActions: [],
+    queuedUpdates: [],
+    local: {
+      entityById: {},
+      charIdsByContentId: {},
+      tokenIdsByPosStr: {},
+    },
+    network: {
+      entityById: {},
+      charIdsByContentId: {},
+      tokenIdsByPosStr: {},
+    },
   },
 };
 
@@ -62,27 +76,27 @@ const boardSlice = createSlice({
   reducers: {
     receiveInitialState(state, action: PayloadAction<Token[]>) {
       applyNetworkUpdate(
-        state,
+        state.tokens,
         action.payload.map((token) => ({ type: "upsert", token }))
       );
     },
     receiveNetworkUpdate(state, action: PayloadAction<NetworkUpdateAction>) {
       const { actions, updateId } = action.payload;
-      applyNetworkUpdate(state, actions, updateId);
+      applyNetworkUpdate(state.tokens, actions, updateId);
     },
     batchUnqueuedActions(state, action: PayloadAction<BatchUnqueuedAction>) {
-      collectUpdate(state, action.payload.updateId);
+      collectUpdate(state.tokens, action.payload.updateId);
     },
     clear(state) {
-      for (const [id] of Object.entries(state.local.entityById)) {
-        applyLocalAction(state, { type: "delete", entityId: id });
+      for (const [id] of Object.entries(state.tokens.local.entityById)) {
+        applyLocalAction(state.tokens, { type: "delete", entityId: id });
       }
     },
     addFloor: {
       reducer: (state, action: PayloadAction<AddTokenAction>) => {
         const { id, contents, pos } = action.payload;
 
-        applyLocalAction(state, {
+        applyLocalAction(state.tokens, {
           type: "upsert",
           token: {
             id,
@@ -101,7 +115,7 @@ const boardSlice = createSlice({
     },
     pingAdded: (state, action: PayloadAction<AddPingAction>) => {
       const { id, pos } = action.payload;
-      applyLocalAction(state, {
+      applyLocalAction(state.tokens, {
         type: "ping",
         ping: {
           type: EntityType.Ping,
@@ -112,10 +126,22 @@ const boardSlice = createSlice({
     },
     removeEntity(state, action: PayloadAction<string>) {
       const id = action.payload;
-      applyLocalAction(state, {
+      applyLocalAction(state.tokens, {
         type: "delete",
         entityId: id,
       });
+    },
+    toggleDeleteMode(state) {
+      state.interaction =
+        state.interaction === InteractionType.Delete
+          ? InteractionType.Draw
+          : InteractionType.Delete;
+    },
+    togglePingMode(state) {
+      state.interaction =
+        state.interaction === InteractionType.Ping
+          ? InteractionType.Draw
+          : InteractionType.Ping;
     },
   },
   extraReducers: {
@@ -136,7 +162,7 @@ const boardSlice = createSlice({
             "Dropped in board but drop type was not grid"
           );
 
-          const token = state.local.entityById[draggable.tokenId];
+          const token = state.tokens.local.entityById[draggable.tokenId];
           // The token was deleted before the drag completed
           if (!token) return;
           assert(
@@ -149,7 +175,7 @@ const boardSlice = createSlice({
             pos: { x: loc.x, y: loc.y, z: CHARACTER_HEIGHT },
           } as Token;
 
-          applyLocalAction(state, {
+          applyLocalAction(state.tokens, {
             type: "upsert",
             token: newToken,
           });
@@ -164,7 +190,7 @@ const boardSlice = createSlice({
           );
 
           const { x, y } = destination.logicalLocation;
-          applyLocalAction(state, {
+          applyLocalAction(state.tokens, {
             type: "upsert",
             token: {
               type: EntityType.Character,
@@ -201,6 +227,8 @@ const {
   receiveInitialState,
   receiveNetworkUpdate,
   batchUnqueuedActions,
+  togglePingMode,
+  toggleDeleteMode,
 } = boardSlice.actions;
 
 export {
@@ -211,5 +239,8 @@ export {
   receiveInitialState,
   receiveNetworkUpdate,
   batchUnqueuedActions,
+  togglePingMode,
+  toggleDeleteMode,
 };
+
 export default boardSlice.reducer;

@@ -33,7 +33,7 @@ export function networkSyncMiddleware(
     const sendUpdates = throttle(() => {
       const state = store.getState();
       if (
-        state.board.unqueuedActions.length === 0 ||
+        state.board.tokens.unqueuedActions.length === 0 ||
         state.connectionState.type !== ConnectionStateType.Connected
       ) {
         return;
@@ -43,7 +43,7 @@ export function networkSyncMiddleware(
       store.dispatch(batchUnqueuedActions({ updateId: requestId }));
       const update = store
         .getState()
-        .board.queuedUpdates.find(
+        .board.tokens.queuedUpdates.find(
           (update: Update) => update.updateId === requestId
         );
       if (update) {

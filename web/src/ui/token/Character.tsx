@@ -16,6 +16,8 @@ const useStyles = makeStyles<Theme, Props>({
     boxSizing: "border-box",
     width: GRID_SIZE_PX,
     height: GRID_SIZE_PX,
+    userDrag: "none",
+    userSelect: "none",
     border: `3px solid ${toCssColor(color)}`,
   }),
   media: {

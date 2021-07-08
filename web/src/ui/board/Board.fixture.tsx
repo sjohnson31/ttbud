@@ -9,6 +9,7 @@ import noop from "../../util/noop";
 import { WALL_ICON } from "../icons";
 import { PureBoard as Board } from "./Board";
 import { ContentType } from "../../types";
+import { InteractionType } from "./board-slice";
 
 const monitor = new DomDroppableMonitor();
 const store = configureStore({
@@ -32,6 +33,7 @@ const ExampleBoard: React.FC = () => {
         onFloorCreated={noop}
         onTokenDeleted={noop}
         onPingCreated={noop}
+        interactionState={InteractionType.Draw}
         boardState={{
           entityById: {},
           tokenIdsByPosStr: {},

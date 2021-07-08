@@ -34,6 +34,7 @@ interface Props {
   descriptor: DraggableDescriptor;
   usePortal?: boolean;
   droppableId?: string;
+  dragEnabled?: boolean;
   children: (
     isDragging: boolean,
     dragAttributes: DragAttributes
@@ -108,6 +109,7 @@ const LEFT_MOUSE = 1;
 const Draggable: React.FC<Props> = ({
   descriptor,
   usePortal = false,
+  dragEnabled = true,
   droppableId,
   children,
 }) => {
@@ -172,7 +174,7 @@ const Draggable: React.FC<Props> = ({
 
   const onPointerDown: PointerEventHandler = useCallback(
     (e) => {
-      if (e.buttons !== LEFT_MOUSE || modifierKeyPressed(e)) {
+      if (!dragEnabled || e.buttons !== LEFT_MOUSE || modifierKeyPressed(e)) {
         return;
       }
       assert(ref.current, `Draggable ${descriptor} did not assign its ref`);
@@ -192,7 +194,7 @@ const Draggable: React.FC<Props> = ({
 
       e.stopPropagation();
     },
-    [descriptor, dispatch, droppableId]
+    [descriptor, dispatch, droppableId, dragEnabled]
   );
 
   useEffect(() => {

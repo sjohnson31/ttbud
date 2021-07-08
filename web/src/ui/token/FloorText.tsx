@@ -16,6 +16,7 @@ const useStyles = makeStyles({
     width: GRID_SIZE_PX,
     height: GRID_SIZE_PX,
     userSelect: "none",
+    userDrag: "none",
   },
 });
 

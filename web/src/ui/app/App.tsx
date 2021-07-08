@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme) => ({
   app: {
     width: 4000,
     height: 2000,
+    // Otherwise safari will try to select the connection notifier text even when you're long pressing no where near it
+    userSelect: "none",
   },
   characterTray: {
     position: "fixed",

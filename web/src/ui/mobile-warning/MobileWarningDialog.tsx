@@ -9,7 +9,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -42,10 +41,8 @@ const MobileWarningDialog: React.FC = () => {
     <Dialog open={open} onClose={closeDialog}>
       <DialogTitle>Warning</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <Typography variant="body1">
-            TTBud doesn't work well on mobile yet, we're working on it
-          </Typography>
+        <DialogContentText variant="body1">
+          TTBud doesn't work well on mobile yet, we're working on it
         </DialogContentText>
       </DialogContent>
       <DialogActions>

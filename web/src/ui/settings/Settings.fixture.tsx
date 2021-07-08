@@ -11,6 +11,11 @@ export default function SettingsFixture() {
       onClearMap={noop}
       onTourClicked={noop}
       onTourPromptDismissed={() => setShowTourPrompt(false)}
+      onDeleteClicked={noop}
+      onPingClicked={noop}
+      onSearchClicked={noop}
+      deleteMode={false}
+      pingMode={false}
     />
   );
 }

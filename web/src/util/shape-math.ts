@@ -18,6 +18,12 @@ export interface Pos3d {
   z: number;
 }
 
+export function distance(first: Pos2d, second: Pos2d): number {
+  return Math.sqrt(
+    Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2)
+  );
+}
+
 export function snapToGrid(pos: Pos2d): Pos2d {
   return {
     x: snapDimensionToGrid(pos.x),
